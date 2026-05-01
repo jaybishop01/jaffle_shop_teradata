@@ -16,11 +16,11 @@ clean-targets:
     - "logs"
 
 seeds:
-  jaffle_shop:
-    +schema: raw
+  jaffle_shop_teradata:
+    +schema: raw_dbt
     jaffle-data:
       +enabled: "{{ var('load_source_data', false) }}"
-  
+
 vars:
   last_update_ts: 'last_update_ts'
 
