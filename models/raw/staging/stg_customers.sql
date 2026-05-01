@@ -22,4 +22,4 @@ select
     ,
     current_timestamp {{var('last_update_ts')}}
     {%- endif %}
-from {{ ref('raw_customers') }} source
+from {{ source('jaffle_raw', 'raw_customers') }} source

@@ -17,4 +17,4 @@ source.*
 {%- if  var('last_update_ts') %}
 ,'{{ run_started_at }}' (timestamp) {{var('last_update_ts')}}
 {%- endif %}
-from  {{ ref('raw_payments') }} source
+from {{ source('jaffle_raw', 'raw_payments') }} source

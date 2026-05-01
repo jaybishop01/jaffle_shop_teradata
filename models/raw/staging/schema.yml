@@ -1,6 +1,45 @@
 version: 2
 
 sources:
+  - name: jaffle_raw
+    description: "Raw jaffle shop data, loaded into Teradata via `dbt seed` (one-time bootstrap, gated by `load_source_data` var)."
+    schema: "dbt_raw_dbt"
+    tables:
+      - name: raw_customers
+        description: "Customers as captured from the operational system."
+        columns:
+          - name: id
+            description: "Customer natural key from the source system."
+            data_tests:
+              - unique
+              - not_null
+          - name: first_name
+          - name: last_name
+      - name: raw_orders
+        description: "Orders as captured from the operational system."
+        columns:
+          - name: id
+            description: "Order natural key from the source system."
+            data_tests:
+              - unique
+              - not_null
+          - name: user_id
+            description: "FK to `raw_customers.id`."
+          - name: order_date
+          - name: status
+      - name: raw_payments
+        description: "Payments as captured from the operational system."
+        columns:
+          - name: id
+            description: "Payment natural key from the source system."
+            data_tests:
+              - unique
+              - not_null
+          - name: order_id
+            description: "FK to `raw_orders.id`."
+          - name: payment_method
+          - name: amount
+
   - name: cloud_storage
     schema: "{{ target.schema }}" # foreign objects are created in the active target schema
     tables:
