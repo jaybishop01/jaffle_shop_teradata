@@ -21,6 +21,19 @@ seeds:
     jaffle-data:
       +enabled: "{{ var('load_source_data', false) }}"
 
+models:
+  jaffle_shop_teradata:
+    raw:
+      staging:
+        stg_market_customers:
+          +enabled: false
+    discovery:
+      light-integration:
+        lim_market_customers:
+          +enabled: false
+        lim_market_competitors:
+          +enabled: false
+
 vars:
   last_update_ts: 'last_update_ts'
 
