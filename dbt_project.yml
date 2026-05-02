@@ -15,6 +15,13 @@ clean-targets:
     - "dbt_modules"
     - "logs"
 
+# Teradata enforces an "owner reference" check on cross-database views: the
+# database owning a view must hold SELECT WITH GRANT OPTION on every upstream
+# table, even when the same user owns both. Without this, tests/views over the
+# `jaffle_raw` source fail with Error 5315.
+on-run-start:
+  - "GRANT SELECT ON dbt_raw_dbt TO {{ target.schema }} WITH GRANT OPTION"
+
 seeds:
   jaffle_shop_teradata:
     +schema: raw_dbt
