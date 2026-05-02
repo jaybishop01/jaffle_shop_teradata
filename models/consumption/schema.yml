@@ -2,23 +2,14 @@ version: 2
 
 models:
   - name: dim_customers
-    description: This table has basic information about a customer, as well as some derived facts based on a customer's orders
+    description: Customer dimension built from the surrogate key table, joined with order summary metrics and historized customer lifetime value.
 
     columns:
-      - name: customer_id
-        description: This is a unique identifier for a customer
+      - name: customer_key
+        description: Surrogate key for a customer (from `key_customer`).
         tests:
           - unique
           - not_null
-
-      - name: first_name
-        description: Customer's first name. PII.
-
-      - name: last_name
-        description: Customer's last name. PII.
-
-      - name: email
-        description: Customer's email address. PII.
 
       - name: first_order
         description: Date (UTC) of a customer's first order
@@ -29,27 +20,21 @@ models:
       - name: number_of_orders
         description: Count of the number of orders a customer has placed
 
-      - name: total_order_amount
-        description: Total value (AUD) of a customer's orders
+      - name: customer_lifetime_value
+        description: Total customer lifetime value (USD), historized via valid_time.
 
   - name: fct_orders
-    description: This table has basic information about orders, as well as some derived facts based on payments
+    description: Order facts joined with payment breakdown by method.
 
     columns:
-      - name: order_id
-        tests:
-          - unique
-          - not_null
-        description: This is a unique identifier for an order
-
-      - name: customer_id
-        description: Foreign key to the customers table
+      - name: customer_key
+        description: Foreign key to `dim_customers`.
         tests:
           - not_null
           - relationships:
               arguments:
                 to: ref('dim_customers')
-                field: customer_id
+                field: customer_key
 
       - name: order_date
         description: Date (UTC) that the order was placed
@@ -62,27 +47,27 @@ models:
                 values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
 
       - name: amount
-        description: Total amount (AUD) of the order
+        description: Total amount (USD) of the order
         tests:
           - not_null
 
-      - name: credit_card_amount
-        description: Amount of the order (AUD) paid for by credit card
+      - name: credit_card_amount_usd
+        description: Order amount (USD) paid by credit card
         tests:
           - not_null
 
-      - name: coupon_amount
-        description: Amount of the order (AUD) paid for by coupon
+      - name: coupon_amount_usd
+        description: Order amount (USD) paid by coupon
         tests:
           - not_null
 
-      - name: bank_transfer_amount
-        description: Amount of the order (AUD) paid for by bank transfer
+      - name: bank_transfer_amount_usd
+        description: Order amount (USD) paid by bank transfer
         tests:
           - not_null
 
-      - name: gift_card_amount
-        description: Amount of the order (AUD) paid for by gift card
+      - name: gift_card_amount_usd
+        description: Order amount (USD) paid by gift card
         tests:
           - not_null
 
