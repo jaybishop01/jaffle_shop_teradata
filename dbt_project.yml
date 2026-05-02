@@ -25,8 +25,7 @@ on-run-start:
 seeds:
   jaffle_shop_teradata:
     +schema: raw_dbt
-    jaffle-data:
-      +enabled: "{{ var('load_source_data', false) }}"
+    +enabled: "{{ var('load_source_data', false) }}"
 
 models:
   jaffle_shop_teradata:
