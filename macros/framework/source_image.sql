@@ -7,7 +7,7 @@
 {%- set exclude_columns = exclude_columns if exclude_columns else (config.get('exclude_columns', []) if config else []) -%}
 
 {%- if incremental_strategy=='valid_history' %}
-    {%- set valid_to_value = "'9999-12-31 23:59:59.999999+00:00' (timestamp)" -%}
+    {%- set valid_to_value = "cast('9999-12-31 23:59:59.999999+00:00' as timestamp)" -%}
     {%- if valid_from and valid_from is not none -%}
         {%- set valid_from_value = valid_from -%}
         {%- set exclude_columns = exclude_columns + [valid_from] -%} 
@@ -29,7 +29,7 @@ select
     {{ column.name }}
     {%- elif column.name == valid_from -%}
         {% if column.is_date %}
-        {% set valid_to_value = "'9999-12-31' (date)" %}
+        {% set valid_to_value = "cast('9999-12-31' as date)" %}
         {% endif %}
     {% endif %}    
 {%- endfor -%}

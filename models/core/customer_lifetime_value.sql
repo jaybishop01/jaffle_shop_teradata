@@ -19,13 +19,13 @@ select
 {%- if is_incremental() %}
     --Incremental load: compute the customer value as of date
     sum(amount_usd) as total_amount_usd,
-    period(max(order_date), ('9999-12-31' (date))) valid_period
+    period(max(order_date), cast('9999-12-31' as date)) valid_period
 {%- else %}
     --Full load: compute the historical customer value history    
     sum(sum(amount_usd)) over(partition by orders.customer_key order by order_date ROWS UNBOUNDED PRECEDING) total_amount_usd,
     period(
         order_date, 
-        coalesce(lead(order_date) over(partition by orders.customer_key order by order_date) , ('9999-12-31' (date)))
+        coalesce(lead(order_date) over(partition by orders.customer_key order by order_date) , cast('9999-12-31' as date))
         ) valid_period
 {%- endif %}
 
