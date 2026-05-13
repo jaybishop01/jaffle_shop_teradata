@@ -3,6 +3,7 @@ version: 2
 sources:
   - name: jaffle_raw
     description: "Raw jaffle shop data, loaded into Teradata via `dbt seed` (one-time bootstrap, gated by `load_source_data` var)."
+    database: "dbt_raw_dbt"
     schema: "dbt_raw_dbt"
     tables:
       - name: raw_customers
